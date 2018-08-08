@@ -422,6 +422,27 @@ func (d Decimal) Round(places int32) Decimal {
 	return ret
 }
 
+func (d Decimal) RoundUpDown(places int32, down bool) Decimal {
+	// truncate to places + 1
+	ret := d.rescale(-places - 1)
+
+	// add sign(d) * 0.5
+	if down {
+		ret.value.Sub(ret.value, fiveInt)
+	} else {
+		ret.value.Add(ret.value, fiveInt)
+	}
+
+	// floor for positive numbers, ceil for negative numbers
+	_, m := ret.value.DivMod(ret.value, tenInt, new(big.Int))
+	ret.exp += 1
+	if ret.value.Sign() < 0 && m.Cmp(zeroInt) != 0 {
+		ret.value.Add(ret.value, oneInt)
+	}
+
+	return ret
+}
+
 // Floor returns the nearest integer value less than or equal to d.
 func (d Decimal) Floor() Decimal {
 	d.ensureInitialized()
