@@ -423,9 +423,12 @@ func (d Decimal) Round(places int32) Decimal {
 }
 
 func (d Decimal) RoundUpDown(places int32, down bool) Decimal {
+
+	if down {
+		return d.Truncate(places)
+	}
 	// truncate to places + 1
 	ret := d.rescale(-places - 1)
-
 	// add sign(d) * 0.5
 	if down {
 		ret.value.Sub(ret.value, fiveInt)
