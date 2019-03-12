@@ -301,6 +301,18 @@ func (d Decimal) Mod(d2 Decimal) Decimal {
 	return d.Sub(d2.Mul(quo))
 }
 
+func (d Decimal) IsGreaterThan(d2 Decimal) bool {
+	return d.Cmp(d2) > 0
+}
+
+func (d Decimal) IsLessThan(d2 Decimal) bool {
+	return d.Cmp(d2) < 0
+}
+
+func (d Decimal) IsEqualTo(d2 Decimal) bool {
+	return d.Cmp(d2) == 0
+}
+
 // Cmp compares the numbers represented by d and d2 and returns:
 //
 //     -1 if d <  d2
